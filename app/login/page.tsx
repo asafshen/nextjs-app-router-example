@@ -1,6 +1,16 @@
+'use client'
 import { Descope } from '@descope/nextjs-sdk';
+import { useRouter } from 'next/navigation'
+import { useState } from 'react';
 
 export default function Login() {
+	const router = useRouter()
+	const [loading, setLoading] = useState(true)
+	const onSuccess = () => {
+		// navigate to the home page
+		router.push('/')
+	}
+
 	return (
 		<div
 			style={{
@@ -16,8 +26,10 @@ export default function Login() {
 			you cannot pass onSuccess/onError callbacks because they are not serializable. */}
 			<Descope
 				flowId={process.env.NEXT_PUBLIC_DESCOPE_FLOW_ID || 'sign-up-or-in'}
-				redirectAfterSuccess="/"
+				onSuccess={onSuccess}
+				onReady={() => setLoading(false)}
 			/>
+			{loading && <p>Loading...</p>}
 		</div>
 	);
 }
